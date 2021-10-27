@@ -1,3 +1,6 @@
+data "google_project" "project" {
+}
+
 # TODO: Read https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/service_account
 resource "google_service_account" "default" {
   account_id   = "service-account-id"
@@ -37,6 +40,10 @@ resource "google_container_cluster" "primary" {
     services_secondary_range_name = google_compute_subnetwork.custom.secondary_ip_range.1.range_name
   }
 
+  workload_identity_config {
+    workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
+  }
+
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.
@@ -63,5 +70,9 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     oauth_scopes    = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    workload_metadata_config {
+      mode = "GKE_METADATA"
+    }
   }
 }
