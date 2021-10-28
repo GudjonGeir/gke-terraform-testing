@@ -21,12 +21,12 @@ resource "google_project_iam_binding" "project" {
   ]
 }
 
-resource "google_service_account_iam_binding" "admin-account-iam" {
+resource "google_service_account_iam_binding" "ksa_binding" {
   service_account_id = google_service_account.service_account.name
-  role               = "roles/iam.serviceAccountUser"
+  role               = "roles/iam.workloadIdentityUser"
 
   members = [
-   "serviceAccount:${data.google_project.project.id}.svc.id.goog[${local.k8s_namespace}/${local.ksa_name}]",
+   "serviceAccount:ggj-gke-test.svc.id.goog[${local.k8s_namespace}/${local.ksa_name}]",
   ]
 }
-
+ 
