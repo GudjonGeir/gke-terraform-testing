@@ -9,17 +9,17 @@ resource "google_service_account" "default" {
 
 resource "google_compute_subnetwork" "custom" {
   name          = "test-subnetwork"
-  ip_cidr_range = "10.2.0.0/16"
+  ip_cidr_range = "10.2.0.0/20"
   region        = "us-central1"
   network       = google_compute_network.custom.id
   secondary_ip_range {
     range_name    = "services-range"
-    ip_cidr_range = "192.168.1.0/24"
+    ip_cidr_range = "192.168.64.0/20"
   }
 
   secondary_ip_range {
     range_name    = "pod-ranges"
-    ip_cidr_range = "192.168.64.0/22"
+    ip_cidr_range = "192.168.128.0/18"
   }
 }
 
@@ -29,7 +29,7 @@ resource "google_compute_network" "custom" {
 }
 
 resource "google_container_cluster" "primary" {
-  name               = "my-vpc-native-cluster"
+  name               = "my-test-cluster"
   location           = "us-central1-a"
 
   network    = google_compute_network.custom.id
