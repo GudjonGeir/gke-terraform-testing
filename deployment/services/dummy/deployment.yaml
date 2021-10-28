@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummy-service
+  namespace: application
+  labels:
+    app: dummy-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dummy-service
+  template:
+    metadata:
+      labels:
+        app: dummy-service
+    spec:
+      containers:
+      - image: google/cloud-sdk:slim
+        name: workload-identity-test
+        command: ["sleep","infinity"]
+      serviceAccountName: dummy-service
+
